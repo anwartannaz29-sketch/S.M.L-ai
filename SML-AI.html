@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>S.M.L AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --c1: #0d0d1a;
+  --glass: rgba(255,255,255,0.04);
+  --glass2: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #f0f0ff;
+  --text2: #8888aa;
+  --accent: #7c5cfc;
+  --accent2: #fc5cf5;
+  --teal: #00d4aa;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Tajawal',sans-serif;background:var(--c1);color:var(--text);display:flex;height:100vh;height:100dvh;position:relative;overflow:hidden;}
+
+.aurora{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.16;animation:drift 14s ease-in-out infinite alternate;}
+.orb:nth-child(1){width:650px;height:650px;background:radial-gradient(circle,#7c5cfc,transparent);top:-180px;right:-120px;}
+.orb:nth-child(2){width:550px;height:550px;background:radial-gradient(circle,#fc5cf5,transparent);bottom:-120px;left:-100px;animation-delay:-5s;animation-duration:11s;}
+.orb:nth-child(3){width:420px;height:420px;background:radial-gradient(circle,#00d4aa,transparent);top:35%;left:38%;animation-delay:-8s;animation-duration:17s;}
+.orb:nth-child(4){width:300px;height:300px;background:radial-gradient(circle,#ffd166,transparent);bottom:20%;right:20%;animation-delay:-3s;animation-duration:12s;opacity:0.09;}
+@keyframes drift{0%{transform:translate(0,0) scale(1);}100%{transform:translate(50px,35px) scale(1.12);}}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+
+/* SIDEBAR */
+#sidebar{width:268px;flex-shrink:0;background:rgba(8,6,22,0.75);backdrop-filter:blur(28px);border-left:1px solid var(--border);display:flex;flex-direction:column;position:relative;z-index:10;transition:transform .3s;}
+.sb-top{padding:22px 16px 14px;border-bottom:1px solid var(--border);}
+.logo-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.logo-gem{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 0 28px rgba(124,92,252,0.4);}
+.logo-name{font-family:'Orbitron',sans-serif;font-size:19px;font-weight:900;background:linear-gradient(90deg,#fff 20%,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1.2px;}
+.logo-tag{font-size:9px;color:var(--text2);letter-spacing:1.5px;margin-top:2px;}
+#new-btn{width:100%;padding:11px 14px;background:linear-gradient(135deg,rgba(124,92,252,0.22),rgba(252,92,245,0.18));border:1px solid rgba(124,92,252,0.35);border-radius:12px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;font-weight:500;}
+#new-btn:hover{background:linear-gradient(135deg,rgba(124,92,252,0.4),rgba(252,92,245,0.3));border-color:rgba(124,92,252,0.65);box-shadow:0 0 22px rgba(124,92,252,0.28);transform:translateY(-1px);}
+.hist{flex:1;overflow-y:auto;padding:10px;}
+.hist::-webkit-scrollbar{width:3px;}
+.hist::-webkit-scrollbar-thumb{background:rgba(124,92,252,0.3);border-radius:3px;}
+.hl{font-size:10px;color:var(--text2);padding:6px 8px;letter-spacing:1px;text-transform:uppercase;}
+.hi{padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all .2s;margin-bottom:3px;text-align:right;}
+.hi:hover{background:var(--glass2);color:var(--text);border-color:var(--border);}
+.hi.on{background:linear-gradient(135deg,rgba(124,92,252,0.18),rgba(252,92,245,0.12));color:var(--text);border-color:rgba(124,92,252,0.35);}
+.sb-foot{padding:14px 16px;border-top:1px solid var(--border);text-align:center;font-size:11px;color:var(--text2);}
+.sb-foot b{font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:1px;background:linear-gradient(90deg,#4285f4,#34a853,#fbbc05,#ea4335);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* MAIN */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:5;}
+#bar{padding:13px 22px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,6,22,0.55);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);flex-shrink:0;}
+#mbtn{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;}
+.bar-title{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;}
+.pill{font-size:11px;color:#4285f4;background:rgba(66,133,244,0.1);border:1px solid rgba(66,133,244,0.28);padding:4px 13px;border-radius:20px;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+
+#msgs{flex:1;overflow-y:auto;padding:0;}
+#msgs::-webkit-scrollbar{width:4px;}
+#msgs::-webkit-scrollbar-thumb{background:rgba(124,92,252,0.22);border-radius:4px;}
+
+/* WELCOME (ChatGPT-style: logo + title + subtitle only, no big suggestion grid) */
+#welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;gap:16px;padding:40px 20px;text-align:center;}
+.w-gem{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;box-shadow:0 0 70px rgba(124,92,252,0.55);animation:glow 2s ease-in-out infinite;}
+.w-gem svg{width:32px;height:32px;color:#fff;}
+@keyframes glow{0%,100%{box-shadow:0 0 70px rgba(124,92,252,0.55),0 0 140px rgba(252,92,245,0.22);}50%{box-shadow:0 0 100px rgba(124,92,252,0.75),0 0 200px rgba(252,92,245,0.38);}}
+.w-title{font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;background:linear-gradient(135deg,#fff 25%,var(--accent2) 75%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;}
+.w-sub{color:var(--text2);font-size:14px;}
+
+/* MESSAGES */
+.mr{padding:22px 0;animation:min .3s ease;}
+.mr.user{background:transparent;}
+.mr.assistant{background:rgba(255,255,255,0.018);}
+@keyframes min{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.mi{max-width:760px;margin:0 auto;padding:0 26px;display:flex;gap:14px;align-items:flex-start;flex-direction:row-reverse;}
+.av{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;margin-top:2px;}
+.av.user{background:linear-gradient(135deg,#5856d6,#7c5cfc);box-shadow:0 4px 16px rgba(124,92,252,0.45);}
+.av.assistant{background:linear-gradient(135deg,#0d2040,#1a4080);border:1px solid rgba(66,133,244,0.4);box-shadow:0 4px 16px rgba(66,133,244,0.2);}
+.mb{flex:1;font-size:15px;line-height:1.8;color:var(--text);}
+.mr.user .mb{background:linear-gradient(135deg,rgba(124,92,252,0.2),rgba(252,92,245,0.13));border:1px solid rgba(124,92,252,0.28);border-radius:16px 4px 16px 16px;padding:14px 18px;backdrop-filter:blur(10px);}
+.mb p{margin-bottom:10px;}
+.mb p:last-child{margin-bottom:0;}
+.mb strong{color:#fff;}
+.mb code{background:rgba(255,255,255,0.08);border:1px solid var(--border2);padding:2px 7px;border-radius:5px;font-family:'Courier New',monospace;font-size:13px;color:var(--teal);}
+.mb pre{background:rgba(0,0,0,0.55);border:1px solid rgba(0,212,170,0.2);border-radius:12px;padding:16px;margin:10px 0;overflow-x:auto;direction:ltr;text-align:left;font-family:'Courier New',monospace;font-size:12px;color:var(--teal);}
+.dots{display:flex;gap:6px;align-items:center;padding:6px 0;}
+.dots span{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#4285f4,#34a853);animation:td 1.3s infinite;}
+.dots span:nth-child(2){animation-delay:.2s;}
+.dots span:nth-child(3){animation-delay:.4s;}
+@keyframes td{0%,80%,100%{transform:scale(.6);opacity:.4;}40%{transform:scale(1.1);opacity:1;}}
+
+/* INPUT */
+#iarea{flex-shrink:0;padding:15px 22px 20px;background:rgba(8,6,22,0.65);backdrop-filter:blur(22px);border-top:1px solid var(--border);}
+.ibox{max-width:760px;margin:0 auto;background:rgba(255,255,255,0.055);border:1px solid var(--border2);border-radius:16px;display:flex;align-items:flex-end;transition:all .25s;overflow:hidden;backdrop-filter:blur(12px);}
+.ibox:focus-within{border-color:rgba(124,92,252,0.55);box-shadow:0 0 0 3px rgba(124,92,252,0.12),0 0 36px rgba(124,92,252,0.18);}
+#inp{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:'Tajawal',sans-serif;font-size:15px;padding:15px 18px;resize:none;max-height:180px;line-height:1.6;direction:rtl;}
+#inp::placeholder{color:var(--text2);}
+#sbtn{background:none;border:none;padding:11px 15px;cursor:pointer;color:var(--text2);transition:all .2s;flex-shrink:0;margin-bottom:2px;}
+#sbtn:not(:disabled):hover .si{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 24px rgba(124,92,252,0.55);}
+#sbtn:disabled{opacity:.3;cursor:default;}
+.si{width:36px;height:36px;border-radius:10px;background:var(--glass2);display:flex;align-items:center;justify-content:center;transition:all .25s;}
+.ihint{max-width:760px;margin:8px auto 0;text-align:center;font-size:11px;color:var(--text2);}
+
+#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9;}
+#ov.show{display:block;}
+
+@media(max-width:720px){
+  #sidebar{position:fixed;top:0;right:0;height:100%;z-index:10;transform:translateX(110%);}
+  #sidebar.open{transform:translateX(0);}
+  #mbtn{display:block;}
+  .mi{padding:0 14px;}
+  .w-title{font-size:28px;}
+  #iarea{padding:10px 12px 15px;}
+}
+
+/* ── ICONS: consistent sizing for inline SVGs replacing emoji ── */
+.logo-gem svg{width:22px;height:22px;color:#fff;}
+#new-btn{display:flex;align-items:center;justify-content:center;gap:8px;}
+#new-btn svg{width:15px;height:15px;flex-shrink:0;}
+#mbtn svg,.hi-del svg{width:18px;height:18px;}
+.hi-del svg{width:15px;height:15px;}
+.av svg{width:18px;height:18px;color:#fff;}
+.mact button svg{width:13px;height:13px;}
+.usage-badge{max-width:760px;margin:6px auto 0;text-align:center;font-size:10.5px;color:var(--text2);opacity:.75;letter-spacing:.3px;}
+#toast{display:flex;align-items:center;gap:8px;justify-content:center;}
+#toast svg{width:15px;height:15px;flex-shrink:0;color:var(--gold,#ffd166);}
+
+/* ── ACCESSIBILITY: visible focus ring for keyboard users ── */
+.hi:focus-visible,#new-btn:focus-visible,#sbtn:focus-visible,#mbtn:focus-visible,.hi-del:focus-visible{
+  outline:2px solid var(--teal);outline-offset:2px;
+}
+
+/* ── MESSAGE ACTIONS (copy / regenerate) ── */
+.mact{display:flex;gap:6px;margin-top:8px;opacity:0;transition:opacity .2s;}
+.mr.assistant:hover .mact,.mr.assistant:focus-within .mact{opacity:1;}
+.mact button{background:var(--glass);border:1px solid var(--border);color:var(--text2);font-family:'Tajawal',sans-serif;font-size:11px;padding:5px 10px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;}
+.mact button:hover{background:var(--glass2);color:var(--text);border-color:rgba(124,92,252,0.4);}
+
+/* ── HISTORY ITEM: delete button ── */
+.hi{display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.hi-txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.hi-del{background:none;border:none;color:var(--text2);font-size:13px;cursor:pointer;flex-shrink:0;padding:4px 6px;border-radius:6px;opacity:0;transition:opacity .2s,color .2s;}
+.hi:hover .hi-del,.hi-del:focus-visible{opacity:1;}
+.hi-del:hover{color:#ff6b6b;background:rgba(255,107,107,0.12);}
+
+/* ── TOAST (storage / network notices) ── */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(20,16,36,0.95);border:1px solid var(--border2);color:var(--text);font-size:13px;padding:10px 18px;border-radius:12px;z-index:50;opacity:0;pointer-events:none;transition:all .3s;backdrop-filter:blur(10px);max-width:90vw;text-align:center;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}
+}
+</style>
+</head>
+<body>
+
+<div class="aurora"><div class="orb"></div><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div id="ov" onclick="closeSB()"></div>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sb-top">
+    <div class="logo-row">
+      <div class="logo-gem"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z"/></svg></div>
+      <div><div class="logo-name">S.M.L</div><div class="logo-tag">ARTIFICIAL INTELLIGENCE</div></div>
+    </div>
+    <button id="new-btn" onclick="newChat()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> محادثة جديدة</button>
+  </div>
+  <div class="hist" id="hist">
+    <div class="hl">المحادثات</div>
+    <div id="hlist"></div>
+  </div>
+  <div class="sb-foot">مدعوم بـ <b>GEMINI AI</b><br><span style="font-size:10px;margin-top:3px;display:block;opacity:.7">مجاني · بدون تسجيل دخول</span></div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="bar">
+    <button id="mbtn" onclick="togSB()" aria-label="فتح قائمة المحادثات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <div class="bar-title">S.M.L AI</div>
+    <div class="pill">GEMINI</div>
+  </div>
+
+  <div id="msgs">
+    <div id="welcome">
+      <div class="w-gem"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z"/></svg></div>
+      <div class="w-title">S.M.L AI</div>
+      <div class="w-sub">كيف أساعدك اليوم؟</div>
+    </div>
+  </div>
+
+  <div id="iarea">
+    <div class="ibox">
+      <textarea id="inp" rows="1" placeholder="اكتب رسالتك هنا..." onkeydown="hkey(event)" oninput="resize(this)"></textarea>
+      <button id="sbtn" onclick="send()" aria-label="إرسال الرسالة">
+        <div class="si">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+          </svg>
+        </div>
+      </button>
+    </div>
+    <div class="ihint">S.M.L AI قد يُخطئ أحياناً · تحقق من المعلومات المهمة</div>
+    <div class="usage-badge" id="usageBadge"></div>
+  </div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// ══════════════════════════════════════════
+//   API Endpoint آمن من Vercel Backend
+// ══════════════════════════════════════════
+const API_ENDPOINT = "/api/gemini";
+const STORAGE_KEY = "sml_gemini_v2";      // نسخة جديدة من مفتاح التخزين مع حقل schema للترحيل الآمن مستقبلاً
+const MAX_CONVS = 60;                      // سقف عدد المحادثات المحفوظة لتفادي امتلاء localStorage
+const USAGE_KEY = "sml_usage";
+const DAILY_LIMIT = 10;                    // حد الرسائل اليومي لكل متصفح
+const SYS = "أنت S.M.L AI، مساعد ذكاء اصطناعي متطور وذكي. أجب دائماً بالعربية ما لم يتحدث المستخدم بلغة أخرى. كن واضحاً وودياً ومساعداً.";
+
+// نماذج الأسئلة تُستخدم فقط كنص متحرك يُكتب ويُمسح داخل الـ placeholder (وليست بطاقات ضخمة تغطي الشاشة)
+const SUGGESTIONS = [
+  "اشرح لي الذكاء الاصطناعي بطريقة بسيطة",
+  "ساعدني في كتابة رسالة احترافية",
+  "أفضل الأماكن السياحية في العالم",
+  "خطة لتعلم البرمجة من الصفر",
+];
+
+// ── أيقونات SVG بديلة عن الإيموجي (كلها تستخدم currentColor لتتوافق مع أي لون) ──
+const ICONS = {
+  sparkle: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2z"/></svg>`,
+  user: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg>`,
+  copy: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>`,
+  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+  refresh: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.5 9a8.5 8.5 0 0 1 14-3.5L23 10M1 14l5.5 4.5A8.5 8.5 0 0 0 20.5 15"/></svg>`,
+  trash: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`,
+  alert: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M10.3 3.6 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0z"/><path d="M12 17h.01"/></svg>`,
+};
+
+// ── تحميل آمن مع ترحيل من المفتاح القديم إن وجد ──
+function loadConvs() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("sml_gemini");
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.warn("تعذّرت قراءة المحادثات المحفوظة، سيتم البدء بسجل فارغ.", e);
+    return [];
+  }
+}
+
+let convs = loadConvs();
+let cid = null, busy = false;
+const gc = () => convs.find(c => c.id === cid);
+
+// ── حفظ آمن: لا يوقف التطبيق عند امتلاء المساحة، ويقلّص السجل تلقائياً ──
+function sv() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(convs));
+    return true;
+  } catch (e) {
+    if (convs.length > 5) {
+      convs = convs.slice(0, Math.max(5, Math.floor(convs.length * 0.7)));
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(convs));
+        toast("مساحة التخزين ممتلئة — تم حذف أقدم المحادثات تلقائياً للحفاظ على عمل التطبيق.");
+        rh();
+        return true;
+      } catch (e2) { /* ما زالت ممتلئة */ }
+    }
+    toast("تعذّر حفظ المحادثة — مساحة التخزين في المتصفح ممتلئة.");
+    return false;
+  }
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.innerHTML = ICONS.alert + `<span>${msg}</span>`;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 3500);
+}
+
+// ══════════════════════════════════════════
+//   حد الرسائل اليومي (10 رسائل / يوم لكل متصفح)
+// ══════════════════════════════════════════
+function todayKey() { return new Date().toISOString().slice(0, 10); }
+
+function getUsage() {
+  try {
+    const u = JSON.parse(localStorage.getItem(USAGE_KEY) || "{}");
+    if (u.date === todayKey() && typeof u.count === "number") return u;
+  } catch (e) { /* تجاهل وابدأ من جديد */ }
+  return { date: todayKey(), count: 0 };
+}
+
+function bumpUsage() {
+  const u = getUsage();
+  u.count++;
+  try { localStorage.setItem(USAGE_KEY, JSON.stringify(u)); } catch (e) { /* غير حرج */ }
+  return u;
+}
+
+function remainingToday() { return Math.max(0, DAILY_LIMIT - getUsage().count); }
+
+function refreshUsageUI() {
+  const remain = remainingToday();
+  const inp = document.getElementById("inp");
+  const btn = document.getElementById("sbtn");
+  const badge = document.getElementById("usageBadge");
+  badge.textContent = remain > 0
+    ? `${remain} من ${DAILY_LIMIT} رسائل متبقية اليوم`
+    : "وصلت للحد الأقصى اليومي — عد غداً للمتابعة";
+  const limitReached = remain <= 0;
+  inp.disabled = limitReached;
+  btn.disabled = limitReached || busy;
+  if (limitReached) stopTypewriter();
+  else if (!inp.value) startTypewriter();
+}
+
+function newChat() {
+  const id = Date.now() + "-" + Math.random().toString(36).slice(2, 7);
+  convs.unshift({ id, title: "محادثة جديدة", messages: [] });
+  if (convs.length > MAX_CONVS) convs = convs.slice(0, MAX_CONVS);
+  cid = id; sv(); rh(); rm(); closeSB();
+  refreshUsageUI();
+  setTimeout(() => document.getElementById("inp").focus(), 100);
+}
+
+function delConv(id, ev) {
+  ev.stopPropagation();
+  if (!confirm("هل تريد حذف هذه المحادثة نهائياً؟")) return;
+  convs = convs.filter(c => c.id !== id);
+  if (cid === id) cid = convs[0]?.id || null;
+  sv(); rh(); rm();
+}
+
+function rh() {
+  const l = document.getElementById("hlist"); l.innerHTML = "";
+  convs.forEach(c => {
+    const d = document.createElement("div");
+    d.className = "hi" + (c.id === cid ? " on" : "");
+    d.setAttribute("role", "button");
+    d.setAttribute("tabindex", "0");
+    d.setAttribute("aria-label", "فتح محادثة: " + c.title);
+    d.innerHTML = `<span class="hi-txt"></span><button class="hi-del" aria-label="حذف المحادثة" title="حذف">${ICONS.trash}</button>`;
+    d.querySelector(".hi-txt").textContent = c.title;
+    d.onclick = () => { cid = c.id; rh(); rm(); closeSB(); };
+    d.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); d.onclick(); } };
+    d.querySelector(".hi-del").onclick = (e) => delConv(c.id, e);
+    l.appendChild(d);
+  });
+}
+
+// شاشة الترحيب بأسلوب بسيط (شعار + عنوان فقط) بدل بطاقات الاقتراحات الكبيرة
+function welcomeHTML() {
+  return `<div id="welcome"><div class="w-gem">${ICONS.sparkle}</div><div class="w-title">S.M.L AI</div><div class="w-sub">كيف أساعدك اليوم؟</div></div>`;
+}
+
+function rm() {
+  const c = gc(), b = document.getElementById("msgs");
+  if (!c || !c.messages.length) {
+    b.innerHTML = welcomeHTML();
+    return;
+  }
+  b.innerHTML = "";
+  c.messages.forEach((m, i) => am(m.role, m.content, false, i === c.messages.length - 1 && m.role === "assistant"));
+  sb();
+}
+
+function am(role, content, anim = true, withActions = true) {
+  document.getElementById("welcome")?.remove();
+  const b = document.getElementById("msgs");
+  const r = document.createElement("div");
+  r.className = "mr " + role;
+  if (!anim) r.style.animation = "none";
+  const icon = role === "user" ? ICONS.user : ICONS.sparkle;
+  const actions = (role === "assistant" && withActions)
+    ? `<div class="mact"><button onclick="copyMsg(this)" aria-label="نسخ الرد">${ICONS.copy}نسخ</button><button onclick="regen(this)" aria-label="إعادة توليد الرد">${ICONS.refresh}إعادة توليد</button></div>`
+    : "";
+  r.innerHTML = `<div class="mi"><div class="av ${role}">${icon}</div><div class="mb"><div class="mb-content">${fmt(content)}</div>${actions}</div></div>`;
+  b.appendChild(r); sb(); return r;
+}
+
+function at() {
+  document.getElementById("welcome")?.remove();
+  const b = document.getElementById("msgs");
+  const r = document.createElement("div"); r.className = "mr assistant";
+  r.innerHTML = `<div class="mi"><div class="av assistant">${ICONS.sparkle}</div><div class="mb"><div class="dots"><span></span><span></span><span></span></div></div></div>`;
+  b.appendChild(r); sb(); return r;
+}
+
+// ── الأمان أولاً: تنقية HTML بالكامل قبل أي تحويل ماركداون ──
+function esc(t) { return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+function fmt(t) {
+  t = esc(t); // كل النص يُنقّى أولاً — لا مجال لتنفيذ HTML/JS من رسائل المستخدم أو ردود النموذج
+  t = t.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) => `<pre><code>${code.trim()}</code></pre>`);
+  t = t.replace(/`([^`]+)`/g, "<code>$1</code>");
+  t = t.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+  return t.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`).join("");
+}
+
+async function callAPI(messages) {
+  const res = await fetch(API_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ messages, systemInstruction: SYS })
+  });
+  let data;
+  try { data = await res.json(); }
+  catch { throw new Error("رد غير متوقع من الخادم. حاول مرة أخرى لاحقاً."); }
+  if (!res.ok) throw new Error(data.error || "خطأ في الاتصال بالخادم");
+  return data.reply || "عذراً، لم أتمكن من الرد.";
+}
+
+async function send() {
+  const inp = document.getElementById("inp");
+  const text = inp.value.trim();
+  if (!text || busy) return;
+
+  if (remainingToday() <= 0) {
+    refreshUsageUI();
+    toast(`وصلت للحد الأقصى (${DAILY_LIMIT} رسائل/يوم) — عد غداً.`);
+    return;
+  }
+
+  if (!cid) newChat();
+  const c = gc();
+  inp.value = ""; inp.style.height = "auto";
+  busy = true; document.getElementById("sbtn").disabled = true;
+
+  c.messages.push({ role: "user", content: text });
+  if (c.messages.length === 1) c.title = text.slice(0, 36) + (text.length > 36 ? "…" : "");
+  sv(); rh(); am("user", text, true, false);
+  const typ = at();
+  bumpUsage(); refreshUsageUI();
+
+  try {
+    const reply = await callAPI(c.messages);
+    typ.remove();
+    c.messages.push({ role: "assistant", content: reply });
+    sv(); am("assistant", reply);
+  } catch (e) {
+    typ.remove();
+    const msg = "خطأ: " + (e.message || "تعذّر الاتصال. تحقق من الإنترنت وحاول مرة أخرى.");
+    am("assistant", msg, true, false);
+  } finally {
+    busy = false;
+    refreshUsageUI();
+    document.getElementById("inp").focus();
+  }
+}
+
+// ── إعادة توليد آخر رد (تُحتسب أيضاً من الحد اليومي لمنع الالتفاف عليه) ──
+async function regen(btn) {
+  if (busy) return;
+  if (remainingToday() <= 0) {
+    refreshUsageUI();
+    toast(`وصلت للحد الأقصى (${DAILY_LIMIT} رسائل/يوم) — عد غداً.`);
+    return;
+  }
+  const c = gc();
+  if (!c || !c.messages.length) return;
+  if (c.messages[c.messages.length - 1].role === "assistant") c.messages.pop();
+  const row = btn.closest(".mr");
+  row.remove();
+  sv();
+  busy = true; document.getElementById("sbtn").disabled = true;
+  const typ = at();
+  bumpUsage(); refreshUsageUI();
+  try {
+    const reply = await callAPI(c.messages);
+    typ.remove();
+    c.messages.push({ role: "assistant", content: reply });
+    sv(); am("assistant", reply);
+  } catch (e) {
+    typ.remove();
+    am("assistant", "خطأ: " + (e.message || "تعذّر إعادة التوليد."), true, false);
+  } finally {
+    busy = false;
+    refreshUsageUI();
+  }
+}
+
+function copyMsg(btn) {
+  const el = btn.closest(".mb").querySelector(".mb-content");
+  const text = el.innerText;
+  navigator.clipboard?.writeText(text).then(() => {
+    const old = btn.innerHTML;
+    btn.innerHTML = ICONS.check + "تم النسخ";
+    setTimeout(() => (btn.innerHTML = old), 1500);
+  }).catch(() => toast("تعذّر النسخ — انسخ النص يدوياً."));
+}
+
+function hkey(e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }
+function resize(el) { el.style.height = "auto"; el.style.height = Math.min(el.scrollHeight, 180) + "px"; }
+function sb() { const m = document.getElementById("msgs"); m.scrollTop = m.scrollHeight; }
+function togSB() { document.getElementById("sidebar").classList.toggle("open"); document.getElementById("ov").classList.toggle("show"); }
+function closeSB() { document.getElementById("sidebar").classList.remove("open"); document.getElementById("ov").classList.remove("show"); }
+
+// ══════════════════════════════════════════
+//   نص متحرك (يُكتب ويُمسح) داخل الـ placeholder بدل بطاقات الاقتراحات
+// ══════════════════════════════════════════
+let twTimer = null, twIndex = 0, twChar = 0, twDeleting = false;
+function typewriterTick() {
+  const inp = document.getElementById("inp");
+  if (!inp || inp.disabled || document.activeElement === inp || inp.value) {
+    twTimer = setTimeout(typewriterTick, 600); // أوقف الكتابة أثناء تركيز/كتابة المستخدم، وأعد المحاولة لاحقاً
+    return;
+  }
+  const phrase = SUGGESTIONS[twIndex];
+  if (!twDeleting) {
+    twChar++;
+    inp.placeholder = phrase.slice(0, twChar);
+    if (twChar === phrase.length) { twDeleting = true; twTimer = setTimeout(typewriterTick, 1400); return; }
+  } else {
+    twChar--;
+    inp.placeholder = phrase.slice(0, twChar);
+    if (twChar === 0) { twDeleting = false; twIndex = (twIndex + 1) % SUGGESTIONS.length; }
+  }
+  twTimer = setTimeout(typewriterTick, twDeleting ? 28 : 55);
+}
+function startTypewriter() { if (!twTimer) twTimer = setTimeout(typewriterTick, 400); }
+function stopTypewriter() { clearTimeout(twTimer); twTimer = null; const inp = document.getElementById("inp"); if (inp) inp.placeholder = "اكتب رسالتك هنا..."; }
+
+// ضبط ارتفاع دقيق على الجوال (يعالج مشكلة شريط العنوان في Safari/Chrome mobile)
+function setVH() { document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`); }
+setVH();
+window.addEventListener("resize", setVH);
+
+rh();
+if (convs.length) { cid = convs[0].id; rh(); rm(); }
+else { document.getElementById("msgs").innerHTML = welcomeHTML(); }
+refreshUsageUI();
+startTypewriter();
+</script>
+</body>
+</html>
